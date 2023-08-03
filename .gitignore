@@ -11,5 +11,3 @@ w_*
 waymo*
 work_dir*
 work_*
-label_mapping.py
-mmseg_write_imgs.py

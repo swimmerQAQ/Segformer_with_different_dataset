@@ -1,0 +1,10 @@
+{"city342city": {"origin":"city34" ,"unlabeled": "None", "ego vehicle": "None",
+ "rectification border": "None", "out of roi": "None", "static": "None",
+"dynamic": "None", "ground": "road", "road": "road", "sidewalk": "sidewalk", "parking": "road",
+ "rail track": "None", "building": "building", "wall": "wall", "fence": "fence",
+  "guard rail": "None", "bridge": "None",
+  "tunnel": "None", "pole": "pole", "polegroup": "pole", "traffic light": "traffic light", 
+  "traffic sign": "traffic sign", "vegetation": "vegetation", "terrain": "terrain", "sky": "sky",
+  "person": "person", "rider": "rider", "car": "car", "truck": "truck", "bus": "bus",
+   "caravan": "None", "trailer": "None", "train": "train",
+  "motorcycle": "motorcycle", "bicycle": "bicycle", "license plate": "None"}}

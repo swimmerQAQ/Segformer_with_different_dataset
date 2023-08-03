@@ -239,7 +239,8 @@ class CityscapesDataset(CustomDataset):
             # print(basename,filename)
             npy_name = filename[:4] # 原来是7
             import glob, cv2, imageio, os
-            write_path = '/SSD_DISK/users/kuangshaochen/SegFormer/junge_temp/100scenes/'
+            write_path = './output_temp/'
+            os.makedirs(write_path, exist_ok = True)
             #################################### 2023.1.23 chenyurui test 直接输出png
             os.makedirs(write_path+ filename.split('/')[0] + '/labels' , exist_ok = True)
             number = filename.split('/')[-1][:4]

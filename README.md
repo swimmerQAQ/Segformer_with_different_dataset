@@ -1,30 +1,34 @@
-[![NVIDIA Source Code License](https://img.shields.io/badge/license-NSCL-blue.svg)](https://github.com/NVlabs/SegFormer/blob/master/LICENSE)
-![Python 3.8](https://img.shields.io/badge/python-3.8-green.svg)
+## Description
+Most of this repo are copied from ```https://github.com/NVlabs/SegFormer.git``` 
+are used for Segformer train and evaluation.
+## Small modification
+In order to utilize different dataset, simply transform different kind images into mmseg_cityscapes_format. 
+![](./example1.jpg)
+Please refer to ```https://github.com/open-mmlab/mmsegmentation.git```( using txt file to select)
 
-# SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers
+I provide a simple example to transform different dataset.In this repo: 
+```
+python mmseg_write_imgs.py
+```
 
-<!-- ![image](resources/image.png) -->
-<div align="center">
-  <img src="./resources/image.png" height="400">
-</div>
-<p align="center">
-  Figure 1: Performance of SegFormer-B0 to SegFormer-B5.
-</p>
+Please change ./tool/test.py or ./tool/train.py. I modify their args to select 'scenes', because I want to do traing or test on different section of whole dataset.
 
-### [Project page](https://github.com/NVlabs/SegFormer) | [Paper](https://arxiv.org/abs/2105.15203) | [Demo (Youtube)](https://www.youtube.com/watch?v=J0MoRQzZe8U) | [Demo (Bilibili)](https://www.bilibili.com/video/BV1MV41147Ko/)
+If you use mmseg lastest repo or this repo, you should check
+```
+./mmseg/datasets/pipelines/loading.py #60
+```
+Be sure that you are loading the img file you need
 
-SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers.<br>
-[Enze Xie](https://xieenze.github.io/), [Wenhai Wang](https://whai362.github.io/), [Zhiding Yu](https://chrisding.github.io/), [Anima Anandkumar](http://tensorlab.cms.caltech.edu/users/anima/), [Jose M. Alvarez](https://rsu.data61.csiro.au/people/jalvarez/), and [Ping Luo](http://luoping.me/).<br>
-NeurIPS 2021.
+Example:  test.sh config ckpt gpu_nodes --scene will(select your scene doing test)
 
-This repository contains the official Pytorch implementation of training & evaluation code and the pretrained models for [SegFormer](https://arxiv.org/abs/2105.15203).
 
-SegFormer is a simple, efficient and powerful semantic segmentation method, as shown in Figure 1.
+```
+./tools/dist_test.sh local_configs/segformer/B5/segformer.b5.1024x1024.city.160k.py ./work_dirs/first_sidewalk_curb/iter_156000.pth 1  --scene waymo_test
+```
 
-We use [MMSegmentation v0.13.0](https://github.com/open-mmlab/mmsegmentation/tree/v0.13.0) as the codebase.
+![](./example2.jpg)
 
-🔥🔥 SegFormer is on [MMSegmentation](https://github.com/open-mmlab/mmsegmentation/tree/master/configs/segformer). 🔥🔥 
-
+output: ./output_temp/ and You can modify here './mmseg/datasets/cityscapes.py #243' for your own output
 
 ## Installation
 

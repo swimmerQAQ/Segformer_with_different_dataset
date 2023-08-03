@@ -1,0 +1,10 @@
+{"idd2city": {"origin": "idd", "road": "road", "parking": "road", "drivable fallback": "None",
+ "sidewalk": "sidewalk", "rail track": "train", "non-drivable fallback": "None", "person": "person",
+  "animal": "None", "rider": "rider", "motorcycle": "motorcycle", "bicycle": "bicycle",
+   "autorickshaw": "None", "car": "car", "truck": "truck", "bus": "bus", "caravan": "car",
+    "trailer": "None", "train": "train", "vehicle fallback": "None", "curb": "road", "wall": "wall",
+     "fence": "fence", "guard rail": "None", "billboard": "None", "traffic sign": "traffic sign",
+      "traffic light": "traffic light", "pole": "pole", "polegroup": "pole", "obs-str-bar-fallback": "None",
+       "building": "building", "bridge": "None", "tunnel": "None", "vegetation": "vegetation",
+        "sky": "sky", "fallback background": "None", "unlabeled": "None", "ego vehicle": "None",
+         "rectification border": "None", "out of roi": "None", "license plate": "None"}}
