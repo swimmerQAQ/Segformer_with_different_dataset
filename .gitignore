@@ -1,0 +1,15 @@
+__pycache__
+demo
+docker
+docs
+junge_temp
+pretrained
+simu_nerf_work_dir
+swin_v2
+testTemp_imgs
+w_*
+waymo*
+work_dir*
+work_*
+label_mapping.py
+mmseg_write_imgs.py

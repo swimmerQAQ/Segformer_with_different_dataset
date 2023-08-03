@@ -236,6 +236,8 @@ class SwinTransformerBlock(nn.Module):
         assert 0 <= self.shift_size < self.window_size, "shift_size must in 0-window_size"
 
         self.norm1 = norm_layer(dim)
+        # print("create block" , dim, to_2tuple(self.window_size), num_heads,
+            # qkv_bias, attn_drop,drop,to_2tuple(pretrained_window_size) )
         self.attn = WindowAttention(
             dim, window_size=to_2tuple(self.window_size), num_heads=num_heads,
             qkv_bias=qkv_bias, attn_drop=attn_drop, proj_drop=drop,
@@ -351,9 +353,9 @@ class SwinTransformerBlock(nn.Module):
 
         return x
 
-    def extra_repr(self) -> str:
-        return f"dim={self.dim}, input_resolution={self.input_resolution}, num_heads={self.num_heads}, " \
-               f"window_size={self.window_size}, shift_size={self.shift_size}, mlp_ratio={self.mlp_ratio}"
+    # def extra_repr(self) -> str:
+    #     return f"dim={self.dim}, input_resolution={self.input_resolution}, num_heads={self.num_heads}, " \
+    #            f"window_size={self.window_size}, shift_size={self.shift_size}, mlp_ratio={self.mlp_ratio}"
 
     def flops(self):
         flops = 0
@@ -383,7 +385,7 @@ class PatchMerging(nn.Module):
         super().__init__()
         self.dim = dim
         self.reduction = nn.Linear(4 * dim, 2 * dim, bias=False)
-        self.norm = norm_layer(4 * dim)
+        self.norm = norm_layer(2 * dim)
 
     def forward(self, x, H, W):
         """ Forward function.
@@ -409,19 +411,10 @@ class PatchMerging(nn.Module):
         x = torch.cat([x0, x1, x2, x3], -1)  # B H/2 W/2 4*C
         x = x.view(B, -1, 4 * C)  # B H/2*W/2 4*C
 
-        x = self.norm(x)
         x = self.reduction(x)
+        x = self.norm(x)
 
         return x
-
-    def extra_repr(self) -> str:
-        return f"input_resolution={self.input_resolution}, dim={self.dim}"
-
-    def flops(self):
-        H, W = self.input_resolution
-        flops = (H // 2) * (W // 2) * 4 * self.dim * 2 * self.dim
-        flops += H * W * self.dim // 2
-        return flops
 
 
 class BasicLayer(nn.Module):
@@ -448,13 +441,18 @@ class BasicLayer(nn.Module):
                  mlp_ratio=4., qkv_bias=True, drop=0., attn_drop=0.,
                  drop_path=0., norm_layer=nn.LayerNorm, downsample=None, use_checkpoint=False,
                  pretrained_window_size=0):
-
+        # 192 * 2 ** i_layer = dim
+        # 就是head 的input维度
+        # 反正就四层 【H/4 W/4】
+        #【H/4 W/4】/ 2
+        #【H/4 W/4】/ 4
+        #【H/4 W/4】/ 8
         super().__init__()
         self.dim = dim
         # self.input_resolution = input_resolution
         self.depth = depth
         self.use_checkpoint = use_checkpoint
-
+        
         # build blocks
         self.blocks = nn.ModuleList([
             SwinTransformerBlock(dim=dim,
@@ -467,7 +465,11 @@ class BasicLayer(nn.Module):
                                  norm_layer=norm_layer,
                                  pretrained_window_size=pretrained_window_size)
             for i in range(depth)])
-
+        # print(self.blocks[0].attn.relative_position_index.shape)
+        # print(self.blocks[0].attn.relative_coords_table.shape)
+        # print(self.blocks[1].attn.relative_position_index.shape)
+        # print(self.blocks[1].attn.relative_coords_table.shape)
+        # quit()
         # patch merging layer
         if downsample is not None:
             self.downsample = downsample(dim=dim, norm_layer=norm_layer)
@@ -481,6 +483,7 @@ class BasicLayer(nn.Module):
                 x = checkpoint.checkpoint(blk, x)
             else:
                 x = blk(x)
+        # print("downsample：" ,x.shape , H, W )
         if self.downsample is not None:
             x_down = self.downsample(x , H, W)
             Wh, Ww = (H + 1) // 2, (W + 1) // 2
@@ -620,12 +623,7 @@ class SwinTransformerV2(nn.Module):
 
         # absolute position embedding
         if self.ape:
-            #############add
-            pretrain_img_size = to_2tuple(pretrain_img_size)
-            patch_size = to_2tuple(patch_size)
-            patches_resolution = [pretrain_img_size[0] // patch_size[0], pretrain_img_size[1] // patch_size[1]]
-
-            self.absolute_pos_embed = nn.Parameter(torch.zeros(1, embed_dim, patches_resolution[0], patches_resolution[1]))
+            self.absolute_pos_embed = nn.Parameter(torch.zeros(1, num_patches, embed_dim))
             trunc_normal_(self.absolute_pos_embed, std=.02)
 
         self.pos_drop = nn.Dropout(p=drop_rate)
@@ -636,6 +634,15 @@ class SwinTransformerV2(nn.Module):
         # build layers
         self.layers = nn.ModuleList()
         for i_layer in range(self.num_layers):
+            print("building layer" , i_layer)
+            if i_layer == 3:
+                window_size = 6
+            # 192 * 2 ** i_layer = dim
+            # layer input resolution = 【H/4 W/4】/ 2**i_layer 
+            # 反正就四层 【H/4 W/4】
+            #【H/4 W/4】/ 2
+            #【H/4 W/4】/ 4
+            #【H/4 W/4】/ 8
             layer = BasicLayer(dim=int(embed_dim * 2 ** i_layer),
                                depth=depths[i_layer],
                                num_heads=num_heads[i_layer],
@@ -729,7 +736,7 @@ class SwinTransformerV2(nn.Module):
         outs = []
         for i in range(self.num_layers):
             # H,W = self.layers[i].input_resolution[0],self.layers[i].input_resolution[1]
-            # print('第几 layer ', i , "的H, W" , self.num_features[i])
+            # print('第几 layer ', i , "的" , self.num_features[i])
             layer = self.layers[i]
             x_out, H, W, x, Wh, Ww = layer(x, Wh, Ww)
             # print("第几次出：" ,i ,"x out: " , x_out.shape)

@@ -239,13 +239,14 @@ class CityscapesDataset(CustomDataset):
             # print(basename,filename)
             npy_name = filename[:4] # 原来是7
             import glob, cv2, imageio, os
-            write_path = '/HDD_DISK/datasets/cyr_100scenes/'
+            write_path = '/SSD_DISK/users/kuangshaochen/SegFormer/junge_temp/100scenes/'
             #################################### 2023.1.23 chenyurui test 直接输出png
             os.makedirs(write_path+ filename.split('/')[0] + '/labels' , exist_ok = True)
             number = filename.split('/')[-1][:4]
             # print(write_path+ filename.split('/')[0] + '/labels/' + number + '.png')
-            print(predict.shape)
-            imageio.imwrite(write_path+ filename.split('/')[0] + '/labels/' + number + '.png' , predict)
+            # print(predict.shape)
+            # imageio.imwrite(write_path+ filename.split('/')[0] + '/labels/' + number + '.png' , predict)
+            imageio.imwrite(write_path+ filename.split('/')[0] + '/labels/' + filename.split('/')[-1] , predict)
             ###############################################33
             ########################################using miou lidar  scene010_0_gtFine_labelTrainIds
             # mmseg_mask = np.array([0, 1, 7, 7, 7, 7, 7, 7, 2, 3, 255, 255, 255, 4, 5, 6, 255, 255, 255,])
@@ -259,26 +260,36 @@ class CityscapesDataset(CustomDataset):
 
             ############################################################## liwenye train
             ###################################################################333
-            # label = imageio.imread('/HDD_DISK/datasets/data/cityscapes/gtFine/val/'+ \
-            #     filename.replace('leftImg8bit' , 'gtFine_labelTrainIds'))
+            label = imageio.imread('/HDD_DISK/datasets/data/cityscapes/gtFine/val/'+ \
+                filename.replace('leftImg8bit' , 'gtFine_labelTrainIds'))
+            os.makedirs(write_path+ filename.split('/')[0] + '/gt' , exist_ok = True)
+            imageio.imwrite(write_path+ filename.split('/')[0] + '/gt/' + filename.split('/')[-1] , label)
+            os.makedirs(write_path+ filename.split('/')[0] + '/images/' , exist_ok = True)
+            os.system('cp '+'/HDD_DISK/datasets/data/cityscapes/leftImg8bit/val/'+ filename+ ' ' + write_path+ filename.split('/')[0] + '/images/')
+            
+            
+            # os.makedirs(write_path+ filename.split('/')[0] + '/logits' , exist_ok = True)
+            # predicts = np.stack(predicts, axis=0)
+            # print(predicts.shape)
+            # np.save(write_path+ filename.split('/')[0] + '/logits/'+filename.split('/')[-1]+".npy" , predict)
             # mask = label != 255
             # new_label = label[mask]
             # new_predict = predict[mask]
-            # # def genConfusionMatrix(pred, label, n):
-            # #     '''
-            # #     Parameters
-            # #     ----------
-            # #     pred : 预测数组.
-            # #     label : 标签数组.
-            # #     n : 类别数(不包括背景).
-            # #     '''
-            # #     return np.bincount(n*label+pred, minlength=n**2).reshape(n, n)
+            # def genConfusionMatrix(pred, label, n):
+            #     '''
+            #     Parameters
+            #     ----------
+            #     pred : 预测数组.
+            #     label : 标签数组.
+            #     n : 类别数(不包括背景).
+            #     '''
+            #     return np.bincount(n*label+pred, minlength=n**2).reshape(n, n)
 
-            # # def per_class_iu(hist):
-            # #     return np.diag(hist) / (hist.sum(1) + hist.sum(0) - np.diag(hist))
-            # # hist = genConfusionMatrix(new_predict , new_label , 19)
-            # # temp = np.nan_to_num( per_class_iu(hist) )[np.unique(label)[:-2]]
-            # # # print(temp, temp.mean() , np.unique(label))
+            # def per_class_iu(hist):
+            #     return np.diag(hist) / (hist.sum(1) + hist.sum(0) - np.diag(hist))
+            # hist = genConfusionMatrix(new_predict , new_label , 19)
+            # temp = np.nan_to_num( per_class_iu(hist) )[np.unique(label)[:-2]]
+            # # print(temp, temp.mean() , np.unique(label))
             # accuracy = (new_predict == new_label).sum()/(new_label.shape[0])
             # store_name.append(filename)
             # store_score.append(str(accuracy))
@@ -294,6 +305,4 @@ class CityscapesDataset(CustomDataset):
         #################
         # for i in range(len(predicts)) :
         #     print( predicts[i].shape)
-        # predicts = np.stack(predicts, axis=0)
-        # print(predicts.shape)
-        # np.save("/SSD_DISK/datasets/nuScenes_scenes/"+npy_name+"/"+npy_name+".npy" , predicts)
+        
