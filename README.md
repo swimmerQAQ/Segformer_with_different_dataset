@@ -50,7 +50,7 @@ pip install -e . --user
 ./local_configs/_base_/datasets/cityscapes_1024x1024_repeat.py # 3
 ```
 chmod +x example.sh 
-
+./example.sh
 ```
 ### test example
 Example:  test.sh config ckpt gpu_nodes --scene will(select your scene doing test)
