@@ -4,8 +4,8 @@ are used for Segformer train and evaluation.
 ## Small modification
 In order to utilize different dataset, simply transform different kind images into [mmseg_cityscapes_format](https://github.com/open-mmlab/mmsegmentation.git). 
 ```
-your should change: ./local_configs/_base_/datasets/cityscapes_1024x1024_repeat.py #3 
-my data path
+You should change: ./local_configs/_base_/datasets/cityscapes_1024x1024_repeat.py #3 
+My data path
 /HDD_DISK/datasets/data/cityscapes/
 ```
 ![](./example1.jpg)
