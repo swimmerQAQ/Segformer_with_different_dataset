@@ -36,6 +36,22 @@ mmcv-full=1.3.0
 ```
 And you may check the ```./requirements.txt```, if you have some env error. My system is linux 20.04 with cuda version 11.8.
 
+I doing another new in the 'on 13' commit. Hope this commends can help you.
+```
+conda create -n seg_temp python=3.7 -y # you can change 'seg_temp' into another name
+conda activate seg_temp
+pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+git clone https://github.com/swimmerQAQ/Segformer_with_different_dataset.git
+cd Segformer_with_different_dataset/
+pip install mmcv-full==1.3.0 , ipython , attrs , timm , imageio
+pip install -e . --user
+# change your dataset path : data_root = '/HDD_DISK/datasets/data/cityscapes/ '
+```
+./local_configs/_base_/datasets/cityscapes_1024x1024_repeat.py # 3
+```
+chmod +x example.sh 
+
+```
 ### test example
 Example:  test.sh config ckpt gpu_nodes --scene will(select your scene doing test)
 
