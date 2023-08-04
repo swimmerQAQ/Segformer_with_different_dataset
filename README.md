@@ -28,6 +28,12 @@ Be sure that you are loading the img file you need
 
 ### Installation
 Most of my env are from [Segformer](https://github.com/NVlabs/SegFormer.git).
+
+Pytorch version
+```
+pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+mmcv-full=1.3.0
+```
 And you may check the ```./requirements.txt```, if you have some env error. My system is linux 20.04 with cuda version 11.8.
 
 ### test example
