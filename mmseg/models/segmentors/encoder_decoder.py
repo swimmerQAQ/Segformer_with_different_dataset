@@ -340,14 +340,14 @@ class EncoderDecoder(BaseSegmentor):
         seg_pred = seg_logit.argmax(dim=1)
         seg_pred = seg_pred.cpu().numpy()
         ############################################carmask
-        import os
-        write_path = '/EXT_DISK/users/kuangshaochen/junge_temp/'
-        # self_test_pre
-        # print(img_metas);quit()
-        filename = img_metas[0][0]['ori_filename'][:-4]
-        os.makedirs(write_path+ filename.split('/')[-2] + '/logits' , exist_ok = True)
+        # import os
+        # write_path = './output_temp'
+        # # self_test_pre
+        # # print(img_metas);quit()
+        # filename = img_metas[0][0]['ori_filename'][:-4]
+        # os.makedirs(write_path+ filename.split('/')[-2] + '/logits' , exist_ok = True)
             
-        np.save(write_path+ filename.split('/')[-2] + '/logits/'+filename.split('/')[-1]+".npy" , self_test_pre)
+        # np.save(write_path+ filename.split('/')[-2] + '/logits/'+filename.split('/')[-1]+".npy" , self_test_pre)
         # print(img_metas , self_test_pre.shape)
         ####################################################################
         # confidence_mask = self_test_pre[13] < 0.7

@@ -2,6 +2,8 @@ LICENSE
 README.md
 setup.cfg
 setup.py
+mmcv_custom/__init__.py
+mmcv_custom/checkpoint.py
 mmseg/__init__.py
 mmseg/version.py
 mmseg/apis/__init__.py
@@ -52,6 +54,9 @@ mmseg/models/backbones/mobilenet_v3.py
 mmseg/models/backbones/resnest.py
 mmseg/models/backbones/resnet.py
 mmseg/models/backbones/resnext.py
+mmseg/models/backbones/swin_transformer.py
+mmseg/models/backbones/swin_v2.py
+mmseg/models/backbones/swin_v2_fourhead.py
 mmseg/models/backbones/unet.py
 mmseg/models/decode_heads/__init__.py
 mmseg/models/decode_heads/ann_head.py
