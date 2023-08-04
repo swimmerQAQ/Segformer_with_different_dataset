@@ -26,6 +26,10 @@ If you use mmseg lastest repo or this repo, you should check
 ```
 Be sure that you are loading the img file you need
 
+### Installation
+Most of my env are from [Segformer](https://github.com/NVlabs/SegFormer.git).
+And you may check the ```./requirements.txt```, if you have some env error. My system is linux 20.04 with cuda version 11.8.
+
 ### test example
 Example:  test.sh config ckpt gpu_nodes --scene will(select your scene doing test)
 
